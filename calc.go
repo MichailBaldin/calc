@@ -17,7 +17,7 @@ var romanDict = map[string]int{
 	"VI":   6,
 	"VII":  7,
 	"VIII": 8,
-	"VIV":  9,
+	"IX":  9,
 	"X":    10,
 }
 
@@ -121,19 +121,42 @@ func toRomanPrint(number int) (string) {
 	8: "VIII",
 	9: "IX",
 	10: "X",
-	11: "XI",
-	12: "XII",
-	13: "XIII",
-	14: "XIV",
-	15: "XV",
-	16: "XVI",
-	17: "XVII",
-	18: "XVIII",
-	19: "XIX",
-	20: "XX",
+	40: "XL",
+	50: "L",
+	90: "XC",
+	100: "C",
     }
-    text, _ := romanToArabDict[number]
-    return text
+    var text string
+    var rank int = number / 10
+    var mod int = number % 10
+    
+    text, ok := romanToArabDict[number]
+    if ok {
+        return text
+    }
+        
+    
+
+    if rank >= 1 && rank < 4 {
+        for i := 0; i < rank; i++ {
+            text += "X"
+        }
+        text += romanToArabDict[mod]
+        return text
+    } else if rank == 4 {
+        text = "XL" + romanToArabDict[mod]
+        return text
+    } else if rank > 4 && rank < 9 {
+        text = "L"
+        for i := 5; i < rank; i++ {
+            text += "X"
+        }
+        text += romanToArabDict[mod]
+        return text
+    } else {
+        text = "XC" + romanToArabDict[mod]
+        return text
+    }
 }
 
 func main() {
@@ -141,7 +164,7 @@ func main() {
     fmt.Println(`
         Калькулятор для арабских и римских чисел.
         Следует вводить числа от 1 до 10 и от I до X
-        в формате x + y.
+        в формате x + y. Доступные операции +, -, *, /
     `)
 	
 	startFlag := true
@@ -160,13 +183,12 @@ func main() {
     	toPrint(isRoman, elem1, elem2, operand, result)
     	
     	// повторный запрос на вычисление
-    	fmt.Println("Начать заново? да/нет")
+    	fmt.Println("Начать заново? yes/no")
     	var nextStep string
     	_,_ = fmt.Scan(&nextStep)
-    	if nextStep == "нет" {
+    	if nextStep == "no" {
     	    startFlag = false
     	}
 	}
 	
 }
-
